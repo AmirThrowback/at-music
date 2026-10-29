@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0e0b12">
+  <title>AT Music</title>
+  <meta name="description" content="AT Music by Amir Throwback: pyaar ke gaane, poore Bharat se.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23ff2d6f'/%3E%3Ctext x='32' y='42' font-family='Arial' font-weight='900' font-size='26' fill='white' text-anchor='middle'%3EAT%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <nav class="sidebar" aria-label="Main">
+      <div class="brand">AT Music</div>
+      <button class="nav-item active" data-view="home"><span data-icon="home"></span><span>Home</span></button>
+      <button class="nav-item" data-view="search"><span data-icon="search"></span><span>Search</span></button>
+      <button class="nav-item" data-view="library"><span data-icon="library"></span><span>Library</span></button>
+      <div class="nav-spacer"></div>
+      <button class="nav-item nav-lang" data-action="languages"><span data-icon="translate"></span><span>Bhasha</span></button>
+    </nav>
+
+    <main id="main" tabindex="-1"></main>
+
+    <aside id="lyrics" class="lyrics hidden" aria-label="Lyrics"></aside>
+  </div>
+
+  <footer class="player" aria-label="Player">
+    <div class="np" id="np" role="button" tabindex="0" aria-label="Lyrics kholiye">
+      <div class="np-art"><img id="np-art" alt="" onerror="this.style.visibility='hidden'" onload="this.style.visibility=''"></div>
+      <div class="np-text">
+        <div id="np-title" class="np-title">Koi gaana chuniye</div>
+        <div id="np-artist" class="np-artist">AT Music</div>
+      </div>
+      <button id="np-fav" class="icon-btn np-fav" aria-label="Favourite"><span data-icon="heart"></span></button>
+    </div>
+
+    <div class="controls">
+      <div class="buttons">
+        <button id="btn-shuffle" class="icon-btn hide-sm" aria-label="Shuffle"><span data-icon="shuffle"></span></button>
+        <button id="btn-prev" class="icon-btn hide-sm" aria-label="Pichhla gaana"><span data-icon="prev"></span></button>
+        <button id="btn-play" class="play-btn" aria-label="Play"><span data-icon="play"></span></button>
+        <button id="btn-next" class="icon-btn" aria-label="Agla gaana"><span data-icon="next"></span></button>
+        <button id="btn-repeat" class="icon-btn hide-sm" aria-label="Repeat"><span data-icon="repeat"></span></button>
+      </div>
+      <div class="progress hide-sm">
+        <span id="t-cur" class="time">0:00</span>
+        <input id="seek" type="range" min="0" max="1000" value="0" aria-label="Seek">
+        <span id="t-dur" class="time">0:00</span>
+      </div>
+    </div>
+
+    <div class="extras">
+      <button id="btn-lyrics" class="icon-btn" aria-label="Lyrics"><span data-icon="mic"></span></button>
+      <span class="hide-sm vol-icon" data-icon="volume"></span>
+      <input id="volume" class="hide-sm" type="range" min="0" max="1" step="0.01" value="1" aria-label="Volume">
+    </div>
+    <div class="mini-progress"><div id="mini-bar"></div></div>
+  </footer>
+
+  <div id="onboarding" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="ob-title"></div>
+
+  <audio id="audio" preload="metadata"></audio>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,316 @@
+{
+  "lyricLineGapMs": 7000,
+  "regions": [
+    {
+      "id": "hindi",
+      "name": "Hindi",
+      "native": "हिंदी",
+      "accent": "#E91E63"
+    },
+    {
+      "id": "punjabi",
+      "name": "Punjabi",
+      "native": "ਪੰਜਾਬੀ",
+      "accent": "#EF6C00"
+    },
+    {
+      "id": "tamil",
+      "name": "Tamil",
+      "native": "தமிழ்",
+      "accent": "#C62828"
+    },
+    {
+      "id": "telugu",
+      "name": "Telugu",
+      "native": "తెలుగు",
+      "accent": "#8E24AA"
+    },
+    {
+      "id": "malayalam",
+      "name": "Malayalam",
+      "native": "മലയാളം",
+      "accent": "#2E7D32"
+    },
+    {
+      "id": "kannada",
+      "name": "Kannada",
+      "native": "ಕನ್ನಡ",
+      "accent": "#B28704"
+    },
+    {
+      "id": "bengali",
+      "name": "Bengali",
+      "native": "বাংলা",
+      "accent": "#1565C0"
+    },
+    {
+      "id": "marathi",
+      "name": "Marathi",
+      "native": "मराठी",
+      "accent": "#D84315"
+    },
+    {
+      "id": "gujarati",
+      "name": "Gujarati",
+      "native": "ગુજરાતી",
+      "accent": "#00838F"
+    },
+    {
+      "id": "bhojpuri",
+      "name": "Bhojpuri",
+      "native": "भोजपुरी",
+      "accent": "#6D4C41"
+    }
+  ],
+  "tracks": [
+    {
+      "id": "hi_adhoora",
+      "title": "Tere Bina Adhoora",
+      "artist": "Amir Throwback",
+      "region": "hindi",
+      "streamUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+      "artworkUrl": "https://picsum.photos/seed/atmusic-hi_adhoora/600",
+      "lyrics": [
+        "Shaam dhali, teri yaad aayi",
+        "Khamosh lamhon mein teri parchhaayi",
+        "Tu jo nahi, sab kuch adhoora",
+        "Dil ne kaha, bas tu hi poora",
+        "Tere bina adhoora main, tere bina adhoora",
+        "Saans bhi ruki si hai, lamha bhi thehra",
+        "Aaja ve, aaja ve, mere paas aaja",
+        "Tere bina adhoora main, tere bina adhoora"
+      ]
+    },
+    {
+      "id": "hi_baarish",
+      "title": "Baarish Waali Baat",
+      "artist": "Amir Throwback",
+      "region": "hindi",
+      "streamUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+      "artworkUrl": "https://picsum.photos/seed/atmusic-hi_baarish/600",
+      "lyrics": [
+        "Bheegi bheegi raaton mein",
+        "Teri meri baaton mein",
+        "Chhupi hai ek baarish waali baat",
+        "Haathon mein jo haath ho tera",
+        "Ruk jaaye ye saara savera",
+        "Baarish waali baat hai, tu mere saath hai"
+      ]
+    },
+    {
+      "id": "hi_retro",
+      "title": "Retro Dil",
+      "artist": "Amir Throwback",
+      "region": "hindi",
+      "streamUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+      "artworkUrl": "https://picsum.photos/seed/atmusic-hi_retro/600",
+      "lyrics": [
+        "Cassette pe tera naam likha",
+        "Purane gaane, naya sa nasha",
+        "Dil mera retro, pyaar mera classic",
+        "Tu hi meri dhun, tu hi mera music",
+        "Rewind karun to tu hi dikhe",
+        "Play karun to tu hi mile"
+      ]
+    },
+    {
+      "id": "pa_soniye",
+      "title": "Soniye Ve",
+      "artist": "Amir Throwback",
+      "region": "punjabi",
+      "streamUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
+      "artworkUrl": "https://picsum.photos/seed/atmusic-pa_soniye/600",
+      "lyrics": [
+        "Soniye ve, tere naal dil laga",
+        "Chann jeha mukhda, nain tere gulabi",
+        "Tu jadon hasdi, rang jaave asmaan",
+        "Mera dil tera, tu meri jaan",
+        "Soniye ve, soniye ve",
+        "Saari duniya ton sohni tu"
+      ]
+    },
+    {
+      "id": "ta_anbe",
+      "title": "Anbe Anbe",
+      "artist": "Amir Throwback",
+      "region": "tamil",
+      "streamUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
+      "artworkUrl": "https://picsum.photos/seed/atmusic-ta_anbe/600",
+      "lyrics": [
+        "Anbe anbe, nee en uyire",
+        "Teri aankhon mein kadhal ka samandar",
+        "Marina ki lehrein, tu mere andar",
+        "Kadhal kadhal, bas tujhse kadhal",
+        "Anbe anbe, nee en uyire"
+      ]
+    },
+    {
+      "id": "te_prema",
+      "title": "Prema Nuvve",
+      "artist": "Amir Throwback",
+      "region": "telugu",
+      "streamUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
+      "artworkUrl": "https://picsum.photos/seed/atmusic-te_prema/600",
+      "lyrics": [
+        "Nuvve naa prema, nuvve naa lokam",
+        "Tere bina adhoori har kahani",
+        "Godavari ki lehron jaisi tu deewani",
+        "Prema prema, dil ne pukara",
+        "Nuvve naa prema, tu hi sahara"
+      ]
+    },
+    {
+      "id": "ml_pranayam",
+      "title": "Ente Pranayam",
+      "artist": "Amir Throwback",
+      "region": "malayalam",
+      "streamUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3",
+      "artworkUrl": "https://picsum.photos/seed/atmusic-ml_pranayam/600",
+      "lyrics": [
+        "Kerala ki baarish, hari hari raahein",
+        "Teri yaadon mein bheegi meri baahein",
+        "Ente pranayam, sirf tere naam",
+        "Nee ente jeevan, nee ente shaam"
+      ]
+    },
+    {
+      "id": "kn_preethi",
+      "title": "Nanna Preethi",
+      "artist": "Amir Throwback",
+      "region": "kannada",
+      "streamUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3",
+      "artworkUrl": "https://picsum.photos/seed/atmusic-kn_preethi/600",
+      "lyrics": [
+        "Mysore ki galiyon mein tera intezaar",
+        "Chandan si khushboo, tera pyaar",
+        "Neene nanna preethi, neene nanna jeeva",
+        "Dil se dil tak, ek hi dhun"
+      ]
+    },
+    {
+      "id": "bn_tumi",
+      "title": "Tumi Amar",
+      "artist": "Amir Throwback",
+      "region": "bengali",
+      "streamUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3",
+      "artworkUrl": "https://picsum.photos/seed/atmusic-bn_tumi/600",
+      "lyrics": [
+        "Kolkata ki shaam, Hooghly ka kinara",
+        "Tera mera milna, jaise koi ishaara",
+        "Tumi amar bhalobasha",
+        "Ami tomake bhalobashi, sun le na"
+      ]
+    },
+    {
+      "id": "mr_tuch",
+      "title": "Tuch Majhi Preet",
+      "artist": "Amir Throwback",
+      "region": "marathi",
+      "streamUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3",
+      "artworkUrl": "https://picsum.photos/seed/atmusic-mr_tuch/600",
+      "lyrics": [
+        "Mumbai ki baarish, Marine Drive pe tu",
+        "Har lehar kahe, bas tu hi tu",
+        "Tuch majhi preet, tuch majha shwas",
+        "Prem ha khara, tu mere paas"
+      ]
+    },
+    {
+      "id": "gu_tame",
+      "title": "Tame Maari Jaan",
+      "artist": "Amir Throwback",
+      "region": "gujarati",
+      "streamUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3",
+      "artworkUrl": "https://picsum.photos/seed/atmusic-gu_tame/600",
+      "lyrics": [
+        "Garba ki raat, dhol ki dhun",
+        "Teri payal mein mera junoon",
+        "Tame maari jaan, maaro prem tame",
+        "Navratri ke rang, sang ho hum"
+      ]
+    },
+    {
+      "id": "bh_piya",
+      "title": "Piya Ho",
+      "artist": "Amir Throwback",
+      "region": "bhojpuri",
+      "streamUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3",
+      "artworkUrl": "https://picsum.photos/seed/atmusic-bh_piya/600",
+      "lyrics": [
+        "Piya ho, tohre bina jiyara na laage",
+        "Ganga kinare baithi, raah tohar taakein",
+        "Chaand bhi poochhe, kahan gaile piya",
+        "Piya ho, piya ho, aaja more jiya"
+      ]
+    }
+  ],
+  "playlists": [
+    {
+      "id": "p_all",
+      "title": "All India Romance",
+      "subtitle": "Ek dil, das bhashayein",
+      "region": "all",
+      "tracks": [
+        "hi_adhoora",
+        "hi_baarish",
+        "hi_retro",
+        "pa_soniye",
+        "ta_anbe",
+        "te_prema",
+        "ml_pranayam",
+        "kn_preethi",
+        "bn_tumi",
+        "mr_tuch",
+        "gu_tame",
+        "bh_piya"
+      ]
+    },
+    {
+      "id": "p_hindi",
+      "title": "Hindi Romance",
+      "subtitle": "Dil se, Amir Throwback ke saath",
+      "region": "hindi",
+      "tracks": [
+        "hi_adhoora",
+        "hi_baarish",
+        "hi_retro"
+      ]
+    },
+    {
+      "id": "p_throwback",
+      "title": "Throwback Pyaar",
+      "subtitle": "Retro vibes, naya ishq",
+      "region": "hindi",
+      "tracks": [
+        "hi_retro",
+        "hi_baarish",
+        "hi_adhoora"
+      ]
+    },
+    {
+      "id": "p_south",
+      "title": "South Ki Kadhal",
+      "subtitle": "Tamil · Telugu · Malayalam · Kannada",
+      "region": "all",
+      "tracks": [
+        "ta_anbe",
+        "te_prema",
+        "ml_pranayam",
+        "kn_preethi"
+      ]
+    },
+    {
+      "id": "p_desh",
+      "title": "Dil Se Desh",
+      "subtitle": "Punjab se Bengal tak",
+      "region": "all",
+      "tracks": [
+        "pa_soniye",
+        "bn_tumi",
+        "mr_tuch",
+        "gu_tame",
+        "bh_piya"
+      ]
+    }
+  ]
+}
