@@ -8,8 +8,8 @@
     search: 'M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z',
     library: 'M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z',
     translate: 'M12.87 15.07l-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z',
-    play: 'M8 5v14l11-7z',
-    pause: 'M6 19h4V5H6v14zm8-14v14h4V5h-4z',
+    play: 'M8 5.14v13.72a1 1 0 0 0 1.5.86l11-6.86a1 1 0 0 0 0-1.72l-11-6.86A1 1 0 0 0 8 5.14z',
+    pause: 'M7 5h3a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm7 0h3a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z',
     next: 'M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z',
     prev: 'M6 6h2v12H6zm3.5 6l8.5 6V6z',
     shuffle: 'M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z',
@@ -19,7 +19,7 @@
     heartFill: 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z',
     mic: 'M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z',
     volume: 'M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02z',
-    close: 'M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z',
+    down: 'M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z',
     check: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z',
   };
 
@@ -34,6 +34,7 @@
     const s = Math.floor(sec);
     return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
   };
+  const hash = (s) => { let h = 7; for (const c of s) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; };
 
   const store = {
     get(key, fallback) {
@@ -52,8 +53,8 @@
     index: -1,
     shuffle: false,
     repeat: 'off',
-    lyricsOpen: false,
-    activeLine: -1,
+    npOpen: false,
+    activeLine: -2,
     favs: new Set(store.get('favs', [])),
     langs: store.get('langs', null),
   };
@@ -63,25 +64,74 @@
   let tracks = [];
   let trackById = {};
   let playlists = [];
+  let lineGap = 7000;
+  let lyricEls = [];
   const queues = new Map();
 
   const audio = $('#audio');
   const main = $('#main');
-  const lyricsEl = $('#lyrics');
-  const seek = $('#seek');
+  const npf = $('#nowplaying');
+  const lyrBox = $('#npf-lyrics');
+  const lyrTrack = $('#lyr-track');
   const volume = $('#volume');
   let seeking = false;
+
+  // ---------- Generated cover art (used until a real cover is uploaded) ----------
+  const DEEP = ['#14061f', '#1d0a2e', '#0a1230', '#2a0716', '#061a1c', '#1f1406'];
+  const coverCache = new Map();
+
+  function wrapTitle(title, max = 11) {
+    const lines = [''];
+    for (const w of title.split(' ')) {
+      const cur = lines[lines.length - 1];
+      if (cur && (cur + ' ' + w).length > max) lines.push(w);
+      else lines[lines.length - 1] = cur ? `${cur} ${w}` : w;
+    }
+    return lines.slice(0, 3);
+  }
+
+  function art(t) {
+    if (t.artworkUrl) return t.artworkUrl;
+    if (coverCache.has(t.id)) return coverCache.get(t.id);
+    const r = regionById[t.region];
+    const h = hash(t.id);
+    const deep = DEEP[h % DEEP.length];
+    const lines = wrapTitle(t.title);
+    const fs = lines.length > 2 ? 62 : 76;
+    const cx = 410 + (h % 90);
+    const cy = 150 + ((h >> 4) % 90);
+    const text = lines.map((l, i) =>
+      `<text x="40" y="${Math.round(490 - (lines.length - 1 - i) * fs * 1.05)}" font-family="Poppins,Arial,sans-serif" font-weight="800" font-size="${fs}" fill="#fff" letter-spacing="-2">${esc(l)}</text>`).join('');
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+      <defs>
+        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${r.accent}"/><stop offset="1" stop-color="${deep}"/></linearGradient>
+        <radialGradient id="l" cx="${20 + (h % 50)}%" cy="${10 + ((h >> 3) % 40)}%" r="70%"><stop offset="0" stop-color="#fff" stop-opacity=".42"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+      </defs>
+      <rect width="600" height="600" fill="url(#g)"/>
+      <rect width="600" height="600" fill="url(#l)"/>
+      <g fill="none" stroke="#fff" stroke-opacity=".16" stroke-width="2">
+        <circle cx="${cx}" cy="${cy}" r="170"/><circle cx="${cx}" cy="${cy}" r="125"/><circle cx="${cx}" cy="${cy}" r="80"/>
+      </g>
+      <circle cx="${cx}" cy="${cy}" r="34" fill="#fff" fill-opacity=".2"/>
+      <text x="44" y="84" font-family="Poppins,Arial,sans-serif" font-weight="800" font-size="26" fill="#fff" letter-spacing="4">AT MUSIC</text>
+      ${text}
+      <text x="44" y="550" font-family="Poppins,Arial,sans-serif" font-size="25" fill="#fff" fill-opacity=".85">${esc(r.native)} · ${esc(t.artist)}</text>
+    </svg>`;
+    const url = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    coverCache.set(t.id, url);
+    return url;
+  }
 
   // ---------- Catalog ----------
   async function loadCatalog() {
     const res = await fetch('catalog.json', { cache: 'no-cache' });
     const data = await res.json();
-    const gap = data.lyricLineGapMs || 7000;
+    lineGap = data.lyricLineGapMs || 7000;
     regions = data.regions;
     regionById = Object.fromEntries([ALL, ...regions].map((r) => [r.id, r]));
     tracks = data.tracks.map((t) => ({
       ...t,
-      lyrics: (t.lyrics || []).map((line, i) => (typeof line === 'string' ? { t: i * gap, text: line } : line)),
+      lyrics: (t.lyrics || []).map((line, i) => (typeof line === 'string' ? { t: i * lineGap, text: line } : line)),
     }));
     trackById = Object.fromEntries(tracks.map((t) => [t.id, t]));
     playlists = data.playlists.map((p) => ({ ...p, tracks: p.tracks.map((id) => trackById[id]).filter(Boolean) }));
@@ -101,18 +151,19 @@
 
   const current = () => state.queue[state.index];
 
-  // ---------- Rendering ----------
+  // ---------- Views ----------
+  const EQ = '<span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>';
+
   function card(track, queueId, i) {
-    const r = regionById[track.region];
     const cur = current()?.id === track.id;
     return `<button class="card${cur ? ' is-current' : ''}" data-track="${track.id}" data-q="${queueId}" data-i="${i}">
       <div class="art">
-        <img loading="lazy" src="${esc(track.artworkUrl)}" alt="" onerror="this.style.visibility='hidden'">
-        <span class="badge" style="background:${r.accent}">${esc(r.native)}</span>
-        <span class="play-fab">${icon('play', 26)}</span>
+        <img loading="lazy" src="${esc(art(track))}" alt="">
+        ${EQ}
+        <span class="play-fab">${icon('play', 24)}</span>
       </div>
       <div class="card-title">${esc(track.title)}</div>
-      <div class="card-sub">${esc(track.artist)}</div>
+      <div class="card-sub">${esc(track.artist)} · ${esc(regionById[track.region].native)}</div>
     </button>`;
   }
 
@@ -123,7 +174,7 @@
       const fav = state.favs.has(t.id);
       return `<div class="trow${current()?.id === t.id ? ' is-current' : ''}" data-track="${t.id}" data-q="${queueId}" data-i="${i}" role="button" tabindex="0">
         <span class="num">${i + 1}</span>
-        <img loading="lazy" src="${esc(t.artworkUrl)}" alt="" onerror="this.style.visibility='hidden'">
+        <img loading="lazy" src="${esc(art(t))}" alt="">
         <div><div class="tt">${esc(t.title)}</div><div class="ta">${esc(t.artist)}</div></div>
         <span class="tr">${esc(r.native)} · ${esc(r.name)}</span>
         <button class="fav-btn${fav ? ' on' : ''}" data-fav="${t.id}" aria-label="Favourite">${icon(fav ? 'heartFill' : 'heart', 20)}</button>
@@ -131,23 +182,48 @@
     }).join('')}</div>`;
   }
 
+  function hero(secs) {
+    const list = secs[0]?.tracks || [];
+    const t = list[0];
+    if (!t) return '';
+    queues.set('hero', list);
+    const r = regionById[t.region];
+    const cover = esc(art(t));
+    return `<section class="hero" style="--accent:${r.accent}">
+      <img class="hero-bg" src="${cover}" alt="">
+      <div>
+        <span class="eyebrow">AAJ KA GAANA · ${esc(r.native)}</span>
+        <h1>${esc(t.title)}</h1>
+        <p>${esc(t.artist)} · ${esc(t.lyrics[0]?.text || 'AT Music Original')}</p>
+        <div class="hero-actions">
+          <button class="btn-primary" data-q="hero" data-i="0">${icon('play', 22)} Play</button>
+          <button class="btn-ghost" data-q="hero" data-i="0" data-open-np>Lyrics ke saath</button>
+        </div>
+      </div>
+      <img class="hero-art" src="${cover}" alt="">
+    </section>`;
+  }
+
   function renderHome() {
     const secs = sectionsFor(state.hub);
     queues.clear();
     secs.forEach((s) => queues.set(s.id, s.tracks));
+    document.documentElement.style.setProperty('--hub', regionById[state.hub].accent);
     const chips = [ALL, ...regions].map((r) =>
       `<button class="chip${state.hub === r.id ? ' active' : ''}" style="--accent:${r.accent}" data-hub="${r.id}">${r.id === 'all' ? r.name : `${esc(r.native)}&nbsp; ${esc(r.name)}`}</button>`).join('');
     main.innerHTML = `
-      <header class="page-head"><h1 class="brand-title">AT Music</h1><p class="muted">Pyaar ke gaane, poore Bharat se</p></header>
+      ${hero(secs)}
       <div class="chips">${chips}</div>
-      ${secs.map((s) => `<section class="row"><h2>${esc(s.title)}</h2><p class="muted">${esc(s.subtitle)}</p>
-        <div class="cards">${s.tracks.map((t, i) => card(t, s.id, i)).join('')}</div></section>`).join('')}`;
+      ${secs.map((s) => `<section class="row">
+        <div class="row-head"><div><h2>${esc(s.title)}</h2><p>${esc(s.subtitle)}</p></div></div>
+        <div class="cards">${s.tracks.map((t, i) => card(t, s.id, i)).join('')}</div>
+      </section>`).join('')}`;
   }
 
   function searchResults() {
     const q = state.query.trim().toLowerCase();
     if (!q) {
-      return `<h2 style="margin:28px 0 0">Bhasha se dhoondhiye</h2>
+      return `<h2 style="margin:30px 0 0;font-size:22px">Bhasha se dhoondhiye</h2>
         <div class="tiles">${regions.map((r) => `<button class="tile" style="--accent:${r.accent}" data-hub="${r.id}"><b>${esc(r.native)}</b><span>${esc(r.name)}</span></button>`).join('')}</div>`;
     }
     const hits = tracks.filter((t) => {
@@ -159,6 +235,7 @@
 
   function renderSearch() {
     queues.clear();
+    document.documentElement.style.setProperty('--hub', ALL.accent);
     main.innerHTML = `
       <header class="page-head"><h1>Search</h1></header>
       <label class="search-box">${icon('search', 22)}<input id="q" type="search" placeholder="Gaana, artist, bhasha ya lyrics…" value="${esc(state.query)}" autocomplete="off"></label>
@@ -170,10 +247,11 @@
 
   function renderLibrary() {
     queues.clear();
+    document.documentElement.style.setProperty('--hub', '#7b2cff');
     const favs = tracks.filter((t) => state.favs.has(t.id));
     main.innerHTML = `
       <header class="page-head"><h1>Your Library</h1><p class="muted">${favs.length} pasandida gaane</p></header>
-      ${favs.length ? trackRows(favs, 'library') : `<p class="empty">Abhi koi favourite nahi hai.<br>Kisi gaane par ${icon('heart', 16).replace('<svg', '<svg style="display:inline;vertical-align:-3px"')} dabaiye.</p>`}`;
+      ${favs.length ? trackRows(favs, 'library') : `<p class="empty">Abhi koi favourite nahi hai.<br>Kisi gaane ke ♡ par tap kijiye.</p>`}`;
   }
 
   function render() {
@@ -187,52 +265,58 @@
     $$('[data-track]').forEach((el) => el.classList.toggle('is-current', el.dataset.track === id));
   }
 
-  // ---------- Lyrics ----------
-  function renderLyrics() {
-    const t = current();
-    state.activeLine = -1;
-    if (!t) {
-      lyricsEl.innerHTML = `<div class="lyr-head"><div class="grow"><div class="t">Lyrics</div></div>
-        <button class="lyr-close" data-action="close-lyrics" aria-label="Band kijiye">${icon('close', 22)}</button></div>
-        <p class="lyr-note">Pehle koi gaana chalaiye.</p>`;
-      return;
+  // ---------- Now Playing + lyrics ----------
+  function setNowPlayingOpen(open, lyricsFirst = false) {
+    if (open && !current()) return;
+    state.npOpen = open;
+    npf.classList.toggle('open', open);
+    npf.setAttribute('aria-hidden', String(!open));
+    if (open) {
+      npf.classList.toggle('show-lyrics', lyricsFirst);
+      state.activeLine = -2;
+      requestAnimationFrame(() => tick());
     }
-    const r = regionById[t.region];
-    lyricsEl.style.setProperty('--accent', r.accent);
-    lyricsEl.innerHTML = `
-      <div class="lyr-head">
-        <img src="${esc(t.artworkUrl)}" alt="">
-        <div class="grow"><div class="t">${esc(t.title)}</div><div class="a">${esc(t.artist)}</div></div>
-        <button class="lyr-close" data-action="close-lyrics" aria-label="Band kijiye">${icon('close', 22)}</button>
-      </div>
-      <div class="lyr-from">PLAYING FROM · ${esc(r.native)} ${esc(r.name).toUpperCase()}</div>
-      <div class="lyr-lines">${t.lyrics.map((l, i) => `<button class="lyr-line" data-line="${i}" data-ms="${l.t}">${esc(l.text)}</button>`).join('')}</div>
-      <p class="lyr-note">Kisi line par tap karke wahan pahunchiye.</p>`;
-    syncLyrics();
   }
 
-  function syncLyrics() {
+  function buildLyrics() {
     const t = current();
-    if (!t || !t.lyrics.length) return;
-    const ms = audio.currentTime * 1000;
+    state.activeLine = -2;
+    lyrTrack.style.transform = 'translateY(0)';
+    if (!t) { lyrTrack.innerHTML = ''; lyricEls = []; return; }
+    lyrTrack.innerHTML = t.lyrics.length
+      ? t.lyrics.map((l, i) => `<button class="lyr-line" data-line="${i}" data-ms="${l.t}">${esc(l.text)}</button>`).join('') +
+        '<p class="lyr-note">Kisi bhi line par tap karke gaana wahin se suniye.</p>'
+      : '<p class="lyr-empty">Is gaane ke lyrics jald aa rahe hain ✨</p>';
+    lyricEls = $$('.lyr-line', lyrTrack);
+  }
+
+  function positionLyrics() {
+    const el = lyricEls[state.activeLine];
+    const target = el || lyricEls[0];
+    if (!target) return;
+    const y = target.offsetTop - lyrBox.clientHeight * 0.34 + target.offsetHeight / 2;
+    lyrTrack.style.transform = `translateY(${-Math.max(0, y)}px)`;
+  }
+
+  function syncLyrics(ms) {
+    const t = current();
+    if (!t || !lyricEls.length) return;
     let idx = -1;
     for (let i = 0; i < t.lyrics.length; i++) if (t.lyrics[i].t <= ms) idx = i;
-    if (idx === state.activeLine) return;
-    state.activeLine = idx;
-    $$('.lyr-line', lyricsEl).forEach((el, i) => {
-      el.classList.toggle('active', i === idx);
-      el.classList.toggle('past', i < idx);
-    });
-    if (state.lyricsOpen && idx >= 0) {
-      $(`.lyr-line[data-line="${idx}"]`, lyricsEl)?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    if (idx !== state.activeLine) {
+      state.activeLine = idx;
+      lyricEls.forEach((el, i) => {
+        el.classList.toggle('active', i === idx);
+        el.classList.toggle('past', i < idx);
+      });
+      positionLyrics();
     }
-  }
-
-  function setLyricsOpen(open) {
-    state.lyricsOpen = open;
-    lyricsEl.classList.toggle('hidden', !open);
-    $('#btn-lyrics').classList.toggle('on', open);
-    if (open) { state.activeLine = -1; syncLyrics(); }
+    if (idx >= 0) {
+      const start = t.lyrics[idx].t;
+      const end = t.lyrics[idx + 1]?.t ?? start + lineGap;
+      const p = Math.min(1, Math.max(0, (ms - start) / Math.max(1, end - start)));
+      lyricEls[idx].style.setProperty('--p', `${(p * 112).toFixed(1)}%`);
+    }
   }
 
   // ---------- Playback ----------
@@ -247,9 +331,10 @@
     audio.src = t.streamUrl;
     audio.play().catch(() => { /* autoplay blocked until user gesture */ });
     updateNowPlaying();
-    renderLyrics();
+    buildLyrics();
     markCurrent();
     setMediaSession(t);
+    tick();
   }
 
   function next(auto = false) {
@@ -270,7 +355,7 @@
 
   function prev() {
     if (!state.queue.length) return;
-    if (audio.currentTime > 3 || state.index === 0) { audio.currentTime = 0; return; }
+    if (audio.currentTime > 3 || state.index === 0) { audio.currentTime = 0; tick(); return; }
     loadIndex(state.index - 1);
   }
 
@@ -286,37 +371,51 @@
   function toggleFav(id) {
     if (state.favs.has(id)) state.favs.delete(id); else state.favs.add(id);
     store.set('favs', [...state.favs]);
-    $$(`[data-fav="${id}"]`).forEach((b) => {
-      const on = state.favs.has(id);
-      b.classList.toggle('on', on);
-      b.innerHTML = icon(on ? 'heartFill' : 'heart', 20);
-    });
-    updateFavButton();
+    const on = state.favs.has(id);
+    $$(`[data-fav="${id}"]`).forEach((b) => { b.classList.toggle('on', on); b.innerHTML = icon(on ? 'heartFill' : 'heart', 20); });
+    updateFavButtons();
     if (state.view === 'library') renderLibrary();
   }
 
-  function updateFavButton() {
+  function updateFavButtons() {
     const t = current();
     const on = !!t && state.favs.has(t.id);
-    const b = $('#np-fav');
-    b.classList.toggle('on', on);
-    b.innerHTML = icon(on ? 'heartFill' : 'heart', 20);
+    $$('.fav-cur').forEach((b) => { b.classList.toggle('on', on); b.innerHTML = icon(on ? 'heartFill' : 'heart', 22); });
   }
 
   function updateNowPlaying() {
     const t = current();
     if (!t) return;
-    $('#np-art').src = t.artworkUrl;
+    const r = regionById[t.region];
+    const cover = art(t);
+    $('#np-art').src = cover;
     $('#np-title').textContent = t.title;
-    $('#np-artist').textContent = `${t.artist} · ${regionById[t.region].native}`;
+    $('#np-artist').textContent = `${t.artist} · ${r.native}`;
+    $('#npf-art').src = cover;
+    $('#npf-bg').src = cover;
+    $('#npf-bg2').src = cover;
+    $('#npf-title').textContent = t.title;
+    $('#npf-artist').textContent = `${t.artist} · ${r.native} ${r.name}`;
+    $('#npf-from').textContent = `${r.native} · ${r.name} Romance`;
     document.title = `${t.title} · AT Music`;
-    updateFavButton();
+    updateFavButtons();
   }
 
-  function updatePlayButton() {
+  function updatePlayButtons() {
     const playing = !audio.paused;
-    $('#btn-play').innerHTML = icon(playing ? 'pause' : 'play', 24);
-    $('#btn-play').setAttribute('aria-label', playing ? 'Pause' : 'Play');
+    document.body.classList.toggle('is-playing', playing);
+    $$('[data-cmd="play"]').forEach((b) => {
+      b.innerHTML = icon(playing ? 'pause' : 'play', b.classList.contains('big') ? 36 : 24);
+      b.setAttribute('aria-label', playing ? 'Pause' : 'Play');
+    });
+  }
+
+  function updateModeButtons() {
+    $$('[data-cmd="shuffle"]').forEach((b) => b.classList.toggle('on', state.shuffle));
+    $$('[data-cmd="repeat"]').forEach((b) => {
+      b.classList.toggle('on', state.repeat !== 'off');
+      b.innerHTML = icon(state.repeat === 'one' ? 'repeatOne' : 'repeat');
+    });
   }
 
   function setRangeFill(input) {
@@ -324,19 +423,22 @@
     input.style.setProperty('--pct', pct + '%');
   }
 
-  function updateProgress() {
+  // One animation-frame loop drives the progress bars and the karaoke wipe.
+  let raf = 0;
+  function tick() {
     const d = audio.duration;
     const c = audio.currentTime;
     const frac = isFinite(d) && d > 0 ? c / d : 0;
     if (!seeking) {
-      seek.value = Math.round(frac * 1000);
-      setRangeFill(seek);
-      $('#t-cur').textContent = fmt(c);
+      $$('.seek').forEach((s) => { s.value = Math.round(frac * 1000); setRangeFill(s); });
+      $$('.t-cur').forEach((el) => { el.textContent = fmt(c); });
     }
-    $('#t-dur').textContent = fmt(d);
+    $$('.t-dur').forEach((el) => { el.textContent = fmt(d); });
     $('#mini-bar').style.width = frac * 100 + '%';
-    syncLyrics();
+    syncLyrics(c * 1000);
   }
+  function loop() { tick(); raf = audio.paused ? 0 : requestAnimationFrame(loop); }
+  function startLoop() { if (!raf) raf = requestAnimationFrame(loop); }
 
   function setMediaSession(t) {
     if (!('mediaSession' in navigator)) return;
@@ -344,15 +446,16 @@
       title: t.title,
       artist: t.artist,
       album: 'AT Music',
-      artwork: [{ src: t.artworkUrl, sizes: '600x600', type: 'image/jpeg' }],
+      artwork: [{ src: art(t), sizes: '600x600' }],
     });
   }
 
   // ---------- Onboarding ----------
   function openOnboarding() {
     const el = $('#onboarding');
-    let picked = new Set(state.langs || []);
+    const picked = new Set(state.langs || []);
     el.innerHTML = `<div class="ob">
+      <span class="logo">AT</span>
       <h1 id="ob-title">Kis bhasha mein pyaar sunna hai?</h1>
       <p class="lead">Apni pasand ki bhashayein chuniye. Baad mein kabhi bhi badal sakte hain.</p>
       <div class="ob-grid">${regions.map((r) => `<button class="ob-tile${picked.has(r.id) ? ' on' : ''}" style="--accent:${r.accent}" data-pick="${r.id}" aria-pressed="${picked.has(r.id)}">
@@ -382,6 +485,19 @@
   }
 
   // ---------- Events ----------
+  const COMMANDS = {
+    play: togglePlay,
+    next: () => next(),
+    prev,
+    shuffle: () => { state.shuffle = !state.shuffle; updateModeButtons(); },
+    repeat: () => { state.repeat = { off: 'all', all: 'one', one: 'off' }[state.repeat]; updateModeButtons(); },
+    fav: () => { const t = current(); if (t) toggleFav(t.id); },
+    open: () => setNowPlayingOpen(true),
+    'open-lyrics': () => setNowPlayingOpen(true, true),
+    close: () => setNowPlayingOpen(false),
+    'toggle-lyrics': () => { npf.classList.toggle('show-lyrics'); state.activeLine = -2; requestAnimationFrame(tick); },
+  };
+
   function bind() {
     $$('[data-icon]').forEach((el) => { el.innerHTML = icon(el.dataset.icon); });
 
@@ -389,57 +505,50 @@
       const fav = e.target.closest('[data-fav]');
       if (fav) { toggleFav(fav.dataset.fav); return; }
 
+      const cmd = e.target.closest('[data-cmd]');
+      if (cmd) { COMMANDS[cmd.dataset.cmd]?.(); return; }
+
       const hub = e.target.closest('[data-hub]');
       if (hub) { state.hub = hub.dataset.hub; state.view = 'home'; render(); return; }
 
       const play = e.target.closest('[data-q]');
       if (play) {
         const list = queues.get(play.dataset.q);
-        if (list) playQueue(list, Number(play.dataset.i));
+        if (list) {
+          playQueue(list, Number(play.dataset.i));
+          if (play.hasAttribute('data-open-np')) setNowPlayingOpen(true, true);
+        }
         return;
       }
 
       const line = e.target.closest('[data-ms]');
-      if (line) { audio.currentTime = Number(line.dataset.ms) / 1000; if (audio.paused) audio.play(); return; }
+      if (line) { audio.currentTime = Number(line.dataset.ms) / 1000; if (audio.paused) audio.play(); tick(); return; }
 
       const view = e.target.closest('[data-view]');
-      if (view) { state.view = view.dataset.view; setLyricsOpen(false); render(); return; }
+      if (view) { state.view = view.dataset.view; setNowPlayingOpen(false); render(); return; }
 
-      const action = e.target.closest('[data-action]');
-      if (action?.dataset.action === 'languages') openOnboarding();
-      if (action?.dataset.action === 'close-lyrics') setLyricsOpen(false);
+      if (e.target.closest('[data-action="languages"]')) openOnboarding();
     });
 
     document.addEventListener('keydown', (e) => {
-      const typing = /^(INPUT|TEXTAREA)$/.test(document.activeElement?.tagName) && document.activeElement.type !== 'range';
+      const el = document.activeElement;
+      const typing = el && /^(INPUT|TEXTAREA)$/.test(el.tagName) && el.type !== 'range';
       if (e.code === 'Space' && !typing) { e.preventDefault(); togglePlay(); }
-      if (e.key === 'Enter' && document.activeElement?.matches('.trow')) document.activeElement.click();
+      if (e.key === 'Escape' && state.npOpen) setNowPlayingOpen(false);
+      if (e.key === 'Enter' && el?.matches('.trow, .np')) el.click();
     });
 
-    $('#btn-play').addEventListener('click', togglePlay);
-    $('#btn-next').addEventListener('click', () => next());
-    $('#btn-prev').addEventListener('click', prev);
-    $('#btn-shuffle').addEventListener('click', (e) => {
-      state.shuffle = !state.shuffle;
-      e.currentTarget.classList.toggle('on', state.shuffle);
-    });
-    $('#btn-repeat').addEventListener('click', (e) => {
-      state.repeat = { off: 'all', all: 'one', one: 'off' }[state.repeat];
-      e.currentTarget.classList.toggle('on', state.repeat !== 'off');
-      e.currentTarget.innerHTML = icon(state.repeat === 'one' ? 'repeatOne' : 'repeat');
-    });
-    $('#btn-lyrics').addEventListener('click', () => setLyricsOpen(!state.lyricsOpen));
-    $('#np').addEventListener('click', (e) => { if (!e.target.closest('#np-fav')) setLyricsOpen(!state.lyricsOpen); });
-    $('#np-fav').addEventListener('click', () => { const t = current(); if (t) toggleFav(t.id); });
-
-    seek.addEventListener('input', () => {
-      seeking = true;
-      setRangeFill(seek);
-      if (isFinite(audio.duration)) $('#t-cur').textContent = fmt((seek.value / 1000) * audio.duration);
-    });
-    seek.addEventListener('change', () => {
-      if (isFinite(audio.duration)) audio.currentTime = (seek.value / 1000) * audio.duration;
-      seeking = false;
+    $$('.seek').forEach((s) => {
+      s.addEventListener('input', () => {
+        seeking = true;
+        setRangeFill(s);
+        if (isFinite(audio.duration)) $$('.t-cur').forEach((el) => { el.textContent = fmt((s.value / 1000) * audio.duration); });
+      });
+      s.addEventListener('change', () => {
+        if (isFinite(audio.duration)) audio.currentTime = (s.value / 1000) * audio.duration;
+        seeking = false;
+        tick();
+      });
     });
 
     volume.value = store.get('volume', 1);
@@ -451,11 +560,12 @@
       store.set('volume', Number(volume.value));
     });
 
-    audio.addEventListener('timeupdate', updateProgress);
-    audio.addEventListener('loadedmetadata', updateProgress);
-    audio.addEventListener('play', updatePlayButton);
-    audio.addEventListener('pause', updatePlayButton);
+    audio.addEventListener('play', () => { updatePlayButtons(); startLoop(); });
+    audio.addEventListener('pause', () => { updatePlayButtons(); tick(); });
+    audio.addEventListener('loadedmetadata', tick);
+    audio.addEventListener('seeked', tick);
     audio.addEventListener('ended', () => next(true));
+    window.addEventListener('resize', () => { if (state.npOpen) positionLyrics(); });
 
     if ('mediaSession' in navigator) {
       navigator.mediaSession.setActionHandler('play', () => audio.play());
@@ -467,7 +577,8 @@
 
   async function init() {
     bind();
-    updatePlayButton();
+    updatePlayButtons();
+    updateModeButtons();
     try {
       await loadCatalog();
     } catch {
@@ -475,7 +586,6 @@
       return;
     }
     render();
-    renderLyrics();
     if (!state.langs) openOnboarding();
   }
 

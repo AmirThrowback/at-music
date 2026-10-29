@@ -2,17 +2,20 @@
 <html lang="hi">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0e0b12">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0810">
   <title>AT Music</title>
   <meta name="description" content="AT Music by Amir Throwback: pyaar ke gaane, poore Bharat se.">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23ff2d6f'/%3E%3Ctext x='32' y='42' font-family='Arial' font-weight='900' font-size='26' fill='white' text-anchor='middle'%3EAT%3C/text%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff2d6f'/%3E%3Cstop offset='1' stop-color='%237b2cff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Ctext x='32' y='42' font-family='Arial' font-weight='900' font-size='26' fill='white' text-anchor='middle'%3EAT%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="app">
     <nav class="sidebar" aria-label="Main">
-      <div class="brand">AT Music</div>
+      <div class="brand"><span class="logo">AT</span><span>Music</span></div>
       <button class="nav-item active" data-view="home"><span data-icon="home"></span><span>Home</span></button>
       <button class="nav-item" data-view="search"><span data-icon="search"></span><span>Search</span></button>
       <button class="nav-item" data-view="library"><span data-icon="library"></span><span>Library</span></button>
@@ -21,42 +24,70 @@
     </nav>
 
     <main id="main" tabindex="-1"></main>
-
-    <aside id="lyrics" class="lyrics hidden" aria-label="Lyrics"></aside>
   </div>
 
   <footer class="player" aria-label="Player">
-    <div class="np" id="np" role="button" tabindex="0" aria-label="Lyrics kholiye">
-      <div class="np-art"><img id="np-art" alt="" onerror="this.style.visibility='hidden'" onload="this.style.visibility=''"></div>
+    <div class="np" data-cmd="open" role="button" tabindex="0" aria-label="Now Playing kholiye">
+      <div class="np-art"><img id="np-art" alt=""></div>
       <div class="np-text">
         <div id="np-title" class="np-title">Koi gaana chuniye</div>
         <div id="np-artist" class="np-artist">AT Music</div>
       </div>
-      <button id="np-fav" class="icon-btn np-fav" aria-label="Favourite"><span data-icon="heart"></span></button>
+      <button class="icon-btn fav-cur hide-sm" data-cmd="fav" aria-label="Favourite"><span data-icon="heart"></span></button>
     </div>
 
     <div class="controls">
       <div class="buttons">
-        <button id="btn-shuffle" class="icon-btn hide-sm" aria-label="Shuffle"><span data-icon="shuffle"></span></button>
-        <button id="btn-prev" class="icon-btn hide-sm" aria-label="Pichhla gaana"><span data-icon="prev"></span></button>
-        <button id="btn-play" class="play-btn" aria-label="Play"><span data-icon="play"></span></button>
-        <button id="btn-next" class="icon-btn" aria-label="Agla gaana"><span data-icon="next"></span></button>
-        <button id="btn-repeat" class="icon-btn hide-sm" aria-label="Repeat"><span data-icon="repeat"></span></button>
+        <button class="icon-btn hide-sm" data-cmd="shuffle" aria-label="Shuffle"><span data-icon="shuffle"></span></button>
+        <button class="icon-btn hide-sm" data-cmd="prev" aria-label="Pichhla gaana"><span data-icon="prev"></span></button>
+        <button class="play-btn" data-cmd="play" aria-label="Play"><span data-icon="play"></span></button>
+        <button class="icon-btn" data-cmd="next" aria-label="Agla gaana"><span data-icon="next"></span></button>
+        <button class="icon-btn hide-sm" data-cmd="repeat" aria-label="Repeat"><span data-icon="repeat"></span></button>
       </div>
       <div class="progress hide-sm">
-        <span id="t-cur" class="time">0:00</span>
-        <input id="seek" type="range" min="0" max="1000" value="0" aria-label="Seek">
-        <span id="t-dur" class="time">0:00</span>
+        <span class="time t-cur">0:00</span>
+        <input class="seek" type="range" min="0" max="1000" value="0" aria-label="Seek">
+        <span class="time t-dur">0:00</span>
       </div>
     </div>
 
     <div class="extras">
-      <button id="btn-lyrics" class="icon-btn" aria-label="Lyrics"><span data-icon="mic"></span></button>
+      <button class="icon-btn" data-cmd="open-lyrics" aria-label="Lyrics"><span data-icon="mic"></span></button>
       <span class="hide-sm vol-icon" data-icon="volume"></span>
       <input id="volume" class="hide-sm" type="range" min="0" max="1" step="0.01" value="1" aria-label="Volume">
     </div>
     <div class="mini-progress"><div id="mini-bar"></div></div>
   </footer>
+
+  <section id="nowplaying" class="npf" aria-label="Now Playing" aria-hidden="true">
+    <div class="npf-bg"><img id="npf-bg" alt=""><img id="npf-bg2" alt=""><div class="npf-shade"></div></div>
+    <header class="npf-top">
+      <button class="icon-btn" data-cmd="close" aria-label="Band kijiye"><span data-icon="down"></span></button>
+      <div class="npf-from"><small>PLAYING FROM</small><b id="npf-from">AT Music</b></div>
+      <button class="icon-btn npf-toggle" data-cmd="toggle-lyrics" aria-label="Lyrics ya cover"><span data-icon="mic"></span></button>
+    </header>
+    <div class="npf-body">
+      <div class="npf-left">
+        <div class="npf-art"><img id="npf-art" alt=""></div>
+        <div class="npf-meta">
+          <div class="npf-meta-text"><h2 id="npf-title">Koi gaana chuniye</h2><p id="npf-artist">AT Music</p></div>
+          <button class="icon-btn fav-cur" data-cmd="fav" aria-label="Favourite"><span data-icon="heart"></span></button>
+        </div>
+        <div class="npf-progress">
+          <input class="seek" type="range" min="0" max="1000" value="0" aria-label="Seek">
+          <div class="npf-times"><span class="t-cur">0:00</span><span class="t-dur">0:00</span></div>
+        </div>
+        <div class="npf-controls">
+          <button class="icon-btn" data-cmd="shuffle" aria-label="Shuffle"><span data-icon="shuffle"></span></button>
+          <button class="icon-btn big" data-cmd="prev" aria-label="Pichhla gaana"><span data-icon="prev"></span></button>
+          <button class="play-btn big" data-cmd="play" aria-label="Play"><span data-icon="play"></span></button>
+          <button class="icon-btn big" data-cmd="next" aria-label="Agla gaana"><span data-icon="next"></span></button>
+          <button class="icon-btn" data-cmd="repeat" aria-label="Repeat"><span data-icon="repeat"></span></button>
+        </div>
+      </div>
+      <div class="npf-lyrics" id="npf-lyrics"><div class="lyr-track" id="lyr-track"></div></div>
+    </div>
+  </section>
 
   <div id="onboarding" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="ob-title"></div>
 
